@@ -32,7 +32,7 @@
         <% @blog_categories.each do |category| %>
           <li>
              <%= check_box_tag 'blog_post[category_ids][]', category.id,
-                               @blog_post.categories.include?(category),
+                               @blog_post.blog_categories.include?(category),
                                :id => (id="blog_post_category_ids_#{category.id}") %>
              <%= label_tag 'blog_post[category_ids][]', category.title,
                            :class => 'stripped',
@@ -63,3 +63,4 @@
   <% content_for :stylesheets, render(:partial => 'form.css') -%>
   <% content_for :javascripts, render(:partial => 'form.js') -%>
 <% end %>
+
