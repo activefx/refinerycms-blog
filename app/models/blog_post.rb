@@ -42,7 +42,9 @@ class BlogPost
   scope :all_previous, lambda { where(:published_at.lte => Time.now.beginning_of_month) }
 
   #scope :live, lambda { where( "published_at <= ? and draft = ?", Time.now, false) }
-  scope :live, lambda { where(:published_at.lte => Time.now).and(:draft => false) }
+  # time comparisons are off
+  #scope :live, lambda { where(:published_at.lte => Time.now).and(:draft => false) }
+  scope :live, where(:draft => false)
 
   #scope :previous, lambda { |i| where(["published_at < ? and draft = ?", i.published_at, false]).limit(1) }
   scope :previous, lambda { |i| where(:published_at.lt => i.published_at).and(:draft => false).limit(1) }
@@ -72,7 +74,7 @@ class BlogPost
 
   def live?
     return false if published_at.nil?
-    !draft and published_at <= Time.now
+    !draft # and published_at <= Time.now
   end
 
 #  def category_ids=(ids)
