@@ -1,9 +1,26 @@
+<<<<<<< HEAD
 class BlogPost
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Search
   include Mongoid::Slug
   include Mongoid::MultiParameterAttributes
+=======
+require 'acts-as-taggable-on'
+
+class BlogPost < ActiveRecord::Base
+  
+  default_scope :order => 'published_at DESC'
+  #.first & .last will be reversed -- consider a with_exclusive_scope on these?
+      
+  belongs_to :author, :class_name => 'User', :foreign_key => :user_id
+  
+  has_many :comments, :class_name => 'BlogComment', :dependent => :destroy
+  acts_as_taggable
+  
+  has_many :categorizations
+  has_many :categories, :through => :categorizations, :source => :blog_category
+>>>>>>> master
 
   field :title, :type => String
   field :body, :type => String

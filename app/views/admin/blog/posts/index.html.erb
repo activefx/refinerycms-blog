@@ -3,10 +3,12 @@
   <% if searching? %>
     <h2><%= t('shared.admin.search.results_for', :query => params[:search]) %></h2>
     <% if @blog_posts.any? %>
-      <%= render :partial => "blog_posts",
+    <ul>
+      <%= render :partial => "post",
                  :collection => @blog_posts %>
+    </ul>
     <% else %>
-      <p><%= t('admin.search_no_results') %></p>
+      <p><%= t('shared.admin.search.no_results') %></p>
     <% end %>
   <% else %>
     <% if @blog_posts.any? %>
