@@ -6,7 +6,7 @@
         <time datetime="<%=l post.published_at.to_date, :format => :default %>" class='posted_at'>
           <%= t('blog.shared.posts.created_at', :when => l(post.published_at.to_date, :format => :short)) %>.
         </time>
-        <% if (categories = post.categories).any? %>
+        <% if (categories = post.blog_categories).any? %>
           <aside class='filed_in'>
             <%= t('filed_in', :scope => 'blog.posts.show') %>
             <% categories.each_with_index do |category, index| %>
@@ -27,8 +27,8 @@
 
         <aside class='comment_count'>
           <% if BlogPost.comments_allowed? %>
-            <% if post.comments.any? %>
-               (<%= pluralize(post.comments.approved.count, t('blog.shared.comments.singular')) %>)
+            <% if post.blog_comments.any? %>
+               (<%= pluralize(post.blog_comments.approved.count, t('blog.shared.comments.singular')) %>)
             <% else %>
                   (<%= t('blog.shared.comments.none') %>)
             <% end %>
@@ -38,3 +38,4 @@
     </footer>
   </article>
 <% end %>
+

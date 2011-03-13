@@ -14,8 +14,9 @@ describe BlogComment do
     end
 
     it "has a blog post" do
-      @comment.post.should_not be_nil
+      @comment.blog_post.should_not be_nil
     end
 
   end
 end
+

@@ -6,7 +6,7 @@ class BlogController < ApplicationController
 protected
 
   def find_page
-    @page = Page.find_by_link_url("/blog")
+    @page = Page.where(:link_url => "/blog").first
   end
 
   def find_all_blog_categories
@@ -14,3 +14,4 @@ protected
   end
 
 end
+

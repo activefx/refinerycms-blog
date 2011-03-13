@@ -1,6 +1,7 @@
 .bundle
 *.gem
 *.DS_Store
+Gemfile.lock
 
 # Documentation
 doc/api
@@ -42,3 +43,4 @@ nbproject
 
 # Capybara Bug
 capybara-*html
+

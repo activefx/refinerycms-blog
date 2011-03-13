@@ -6,7 +6,7 @@
   <% if BlogPost.comments_allowed? %>
     <aside id="comments">
       <h2><%= t('.comments.title') %></h2>
-      <% if (comments = @blog_post.comments.approved).any? %>
+      <% if (comments = @blog_post.blog_comments.approved).any? %>
         <%= render :partial => "comment", :collection => comments %>
       <% else %>
         <p>
@@ -75,3 +75,4 @@
     <script>stLight.options({publisher:'<%= BlogPost::ShareThis.key %>'});</script>
   <% end if BlogPost::ShareThis.enabled? %>
 <% end %>
+
