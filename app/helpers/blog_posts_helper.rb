@@ -1,6 +1,7 @@
 module BlogPostsHelper
   def blog_archive_list
-    posts = BlogPost.select('published_at').all_previous
+    #posts = BlogPost.select('published_at').all_previous
+    posts = BlogPost.all_previous
     return nil if posts.blank?
     html = '<section id="blog_archive_list"><h2>'
     html << t('blog.shared.archives')
@@ -10,7 +11,7 @@ module BlogPostsHelper
 
     posts.each do |e|
       if e.published_at >= Time.now.end_of_year.advance(:years => -3)
-        links << e.published_at.strftime('%m/%Y') 
+        links << e.published_at.strftime('%m/%Y')
       else
         super_old_links << e.published_at.strftime('01/%Y')
       end
@@ -21,7 +22,7 @@ module BlogPostsHelper
       year = l.split('/')[1]
       month = l.split('/')[0]
       count = BlogPost.by_archive(Time.parse(l)).size
-      text = t("date.month_names")[month.to_i] + " #{year} (#{count})"      
+      text = t("date.month_names")[month.to_i] + " #{year} (#{count})"
       html << "<li>"
       html << link_to(text, archive_blog_posts_path(:year => year, :month => month))
       html << "</li>"
@@ -42,3 +43,4 @@ module BlogPostsHelper
     post.next.present? or post.prev.present?
   end
 end
+

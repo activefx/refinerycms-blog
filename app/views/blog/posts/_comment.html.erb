@@ -1,4 +1,4 @@
-<article class='blog_comment_message' id='<%= "comment-#{comment.to_param}" %>'>
+<article class='blog_comment_message' id='<%= "comment-#{comment.id.to_s}" %>'>
   <p>
     <%= simple_format auto_link(comment.message.to_s) %>
   </p>
@@ -9,3 +9,4 @@
     </p>
   </footer>
 </article>
+

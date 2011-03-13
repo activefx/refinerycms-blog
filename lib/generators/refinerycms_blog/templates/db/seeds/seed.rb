@@ -1,4 +1,4 @@
-User.find(:all).each do |user|
+Administrator.find(:all).each do |user|
   user.plugins.create(:name => "refinerycms_blog",
                       :position => (user.plugins.maximum(:position) || -1) +1)
 end
@@ -14,3 +14,4 @@ page = Page.create(
 Page.default_parts.each do |default_page_part|
   page.parts.create(:title => default_page_part, :body => nil)
 end
+

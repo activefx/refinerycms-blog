@@ -9,11 +9,11 @@
       <%= link_to t('.back'), {:action => 'index'}, :class => "back_icon" %>
     </li>
     <li>
-      <%= link_to t('.reject'), rejected_admin_blog_comment_path(@blog_comment, :return_to => 'rejected'),
+      <%= link_to t('.reject'), rejected_admin_blog_comment_path(@blog_comment.id, :return_to => 'rejected'),
           :class => 'comment_cross_icon' unless @blog_comment.rejected? %>
     </li>
     <li>
-      <%= link_to t('.approve'), approved_admin_blog_comment_path(@blog_comment, :return_to => 'approved'),
+      <%= link_to t('.approve'), approved_admin_blog_comment_path(@blog_comment.id, :return_to => 'approved'),
           :class => 'comment_tick_icon' unless @blog_comment.approved? %>
     </li>
   </ul>
@@ -26,8 +26,8 @@
         <strong><%= t('.blog_post') %></strong>
       </td>
       <td>
-        <%= link_to @blog_comment.post.title,
-                    blog_post_url(@blog_comment.post, :anchor => "comment-#{@blog_comment.to_param}"),
+        <%= link_to @blog_comment.blog_post.title,
+                    blog_post_url(@blog_comment.blog_post, :anchor => "comment-#{@blog_comment.id.to_s}"),
                     :target => '_blank' %>
       </td>
     </tr>
@@ -64,3 +64,4 @@
 <% else %>
   <% content_for :stylesheets, stylesheet_link_tag('refinery/refinerycms-blog') %>
 <% end %>
+

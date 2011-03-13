@@ -22,8 +22,8 @@ class Blog::PostsController < BlogController
   end
 
   def comment
-    if (@blog_comment = @blog_post.comments.create(params[:blog_comment])).valid?
-      if BlogComment::Moderation.enabled? or @blog_comment.ham?
+    if (@blog_comment = @blog_post.blog_comments.create(params[:blog_comment])).valid?
+      if BlogComment::Moderation.enabled? #or @blog_comment.ham?
         begin
           Blog::CommentMailer.notification(@blog_comment, request).deliver
         rescue
@@ -68,9 +68,9 @@ class Blog::PostsController < BlogController
 protected
 
   def find_blog_post
-    unless (@blog_post = BlogPost.find(params[:id])).try(:live?)
-      if refinery_user? and current_user.authorized_plugins.include?("refinerycms_blog")
-        @blog_post = BlogPost.find(params[:id])
+    unless (@blog_post = BlogPost.find_by_slug(params[:id])).try(:live?)
+      if refinery_user? and current_administrator.authorized_plugins.include?("refinerycms_blog")
+        @blog_post = BlogPost.find_by_slug(params[:id])
       else
         error_404
       end
@@ -78,10 +78,11 @@ protected
   end
 
   def find_all_blog_posts
-    @blog_posts = BlogPost.live.includes(:comments, :categories).paginate({
+    @blog_posts = BlogPost.live.paginate({
       :page => params[:page],
       :per_page => RefinerySetting.find_or_set(:blog_posts_per_page, 10)
     })
   end
 
 end
+

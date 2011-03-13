@@ -19,23 +19,26 @@ describe BlogCategory do
 
   describe "blog posts association" do
     it "has a posts attribute" do
-      BlogCategory.new.should respond_to(:posts)
+      BlogCategory.new.should respond_to(:blog_posts)
     end
-    
+
     it "returns posts by published_at date in descending order" do
       @category = BlogCategory.create!(@attr)
-      @first_post = @category.posts.create!({ :title => "Breaking News: Joe Sak is hot stuff you guys!!", :body => "True story.", :published_at => Time.now.yesterday })
-      @latest_post = @category.posts.create!({ :title => "pardnt is p. okay", :body => "For a kiwi.", :published_at => Time.now })
-      @category.posts.first.should == @latest_post
+      @first_post = @category.blog_posts.create!({ :title => "Breaking News: Joe Sak is hot stuff you guys!!", :body => "True story.", :published_at => Time.now.yesterday })
+      @latest_post = @category.blog_posts.create!({ :title => "pardnt is p. okay", :body => "For a kiwi.", :published_at => Time.now })
+      #workaround - Mongoid issue #587
+      @category.latest_blog_posts.first.should == @latest_post
     end
-      
+
   end
 
   describe "#post_count" do
     it "returns post count in category" do
-      Factory(:post, :categories => [Factory(:blog_category)])
-      Factory(:post, :categories => [Factory(:blog_category)])
-      BlogCategory.first.post_count.should == 2
+      category = Factory(:blog_category)
+      category.blog_posts << Factory(:blog_post)
+      category.blog_posts.create(Factory.attributes_for(:blog_post))
+      BlogCategory.first.post_count.should == 3
     end
   end
 end
+

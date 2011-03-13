@@ -5,3 +5,4 @@ class Admin::Blog::CategoriesController < Admin::BaseController
           :order => 'title ASC'
 
 end
+
