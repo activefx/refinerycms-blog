@@ -2,7 +2,7 @@ Gem::Specification.new do |s|
   s.name              = %q{refinerycms-blog}
   s.version           = %q{1.3.2}
   s.description       = %q{A really straightforward open source Ruby on Rails blog engine designed for integration with RefineryCMS.}
-  s.date              = %q{2011-03-13}
+  s.date              = %q{2011-03-22}
   s.summary           = %q{Ruby on Rails blogging engine for RefineryCMS.}
   s.email             = %q{info@refinerycms.com}
   s.homepage          = %q{http://refinerycms.com}
@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency    'refinerycms',  '>= 0.9.9.4'
   s.add_dependency    'filters_spam', '~> 0.2'
+  s.add_dependency    'mongoid_taggable_with_context'
 
   s.files             = %w(
     lib

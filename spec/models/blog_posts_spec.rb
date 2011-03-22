@@ -49,14 +49,14 @@ describe BlogPost do
 
   describe "tags" do
     it "acts as taggable" do
-      (post = Factory(:post)).should respond_to(:tag_list)
-      post.tag_list.should include("chicago")
+      (post = Factory(:blog_post)).should respond_to(:tags)
+      post.tags_array.should include("chicago")
     end
   end
 
   describe "authors" do
     it "are authored" do
-      BlogPost.instance_methods.map(&:to_sym).should include(:author)
+      BlogPost.new.should respond_to(:administrator)
     end
   end
 
@@ -97,7 +97,7 @@ describe BlogPost do
     it "returns next article based on given article" do
       blog_post1 = Factory(:blog_post)
       blog_post2 = Factory(:blog_post, :published_at => Time.now.advance(:minutes => -1))
-      BlogPost.next(blog_post1).should == [blog_post2]
+      BlogPost.next(blog_post2).first.id.should == blog_post1.id
     end
   end
 
@@ -105,7 +105,7 @@ describe BlogPost do
     it "returns previous article based on given article" do
       blog_post1 = Factory(:blog_post)
       blog_post2 = Factory(:blog_post, :published_at => Time.now.advance(:minutes => -1))
-      BlogPost.previous(blog_post2).should == [blog_post1]
+      BlogPost.previous(blog_post1).first.id.should == blog_post2.id
     end
   end
 
@@ -131,7 +131,7 @@ describe BlogPost do
     end
 
     it "returns false if post pub date is in future" do
-      Factory(:blog_post, :published_at => Time.now.advance(:minutes => 1)).live?.should be_false
+      Factory(:blog_post, :published_at => Time.now.advance(:minutes => 10)).live?.should be_false
     end
   end
 

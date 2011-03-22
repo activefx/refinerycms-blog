@@ -65,7 +65,7 @@ class Blog::PostsController < BlogController
     end
     respond_with (@blog_posts)
   end
-  
+
   def tagged
     @tag_name = params[:tag_name]
     @blog_posts = BlogPost.tagged_with(@tag_name.titleize).paginate({
@@ -92,9 +92,10 @@ protected
       :per_page => RefinerySetting.find_or_set(:blog_posts_per_page, 10)
     })
   end
-  
+
   def find_tags
-    @tags = BlogPost.tag_counts_on(:tags)
+    # @tags = BlogPost.tag_counts_on(:tags)
+    @tags = BlogPost.tags_with_weight
   end
 
 end

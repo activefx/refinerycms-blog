@@ -1,33 +1,23 @@
-<<<<<<< HEAD
+require 'mongoid_taggable_with_context'
+
 class BlogPost
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Search
   include Mongoid::Slug
+  include Mongoid::TaggableWithContext
+  include Mongoid::TaggableWithContext::AggregationStrategy::RealTime
   include Mongoid::MultiParameterAttributes
-=======
-require 'acts-as-taggable-on'
-
-class BlogPost < ActiveRecord::Base
-  
-  default_scope :order => 'published_at DESC'
-  #.first & .last will be reversed -- consider a with_exclusive_scope on these?
-      
-  belongs_to :author, :class_name => 'User', :foreign_key => :user_id
-  
-  has_many :comments, :class_name => 'BlogComment', :dependent => :destroy
-  acts_as_taggable
-  
-  has_many :categorizations
-  has_many :categories, :through => :categorizations, :source => :blog_category
->>>>>>> master
 
   field :title, :type => String
   field :body, :type => String
   field :draft, :type => Boolean
-  field :published_at, :type => Time
+  field :published_at, :type => DateTime
 
   default_scope desc(:published_at)
+  #.first & .last will be reversed -- consider a with_exclusive_scope on these?
+
+  referenced_in :administrator
 
   references_many :blog_comments, :dependent => :destroy, :inverse_of => :blog_post
 
@@ -35,6 +25,7 @@ class BlogPost < ActiveRecord::Base
   #has_many :categories, :through => :categorizations, :source => :blog_category
   references_and_referenced_in_many :blog_categories
 
+  taggable :separator => ','
   #after_save :set_category_relationship
 
   #acts_as_indexed :fields => [:title, :body]
@@ -56,12 +47,12 @@ class BlogPost < ActiveRecord::Base
     where(:published_at.gt => archive_date.beginning_of_year).and(:published_at.lt => archive_date.end_of_year)
   }
 
-  scope :all_previous, lambda { where(:published_at.lte => Time.now.beginning_of_month) }
+  scope :all_previous, lambda { where(:published_at.lte => self.time_now_helper.beginning_of_month) }
 
   #scope :live, lambda { where( "published_at <= ? and draft = ?", Time.now, false) }
   # time comparisons are off
-  #scope :live, lambda { where(:published_at.lte => Time.now).and(:draft => false) }
-  scope :live, where(:draft => false)
+  scope :live, lambda { where(:published_at.lte => self.time_now_helper).and(:draft => false) }
+  #scope :live, where(:draft => false)
 
   #scope :previous, lambda { |i| where(["published_at < ? and draft = ?", i.published_at, false]).limit(1) }
   scope :previous, lambda { |i| where(:published_at.lt => i.published_at).and(:draft => false).limit(1) }
@@ -81,6 +72,16 @@ class BlogPost < ActiveRecord::Base
     self
   end
 
+  def self.per_page
+    15
+  end
+
+  # Time comparisons are off by four hours
+  # not sure what's causing it yet
+  def self.time_now_helper
+    Time.now + 4.hours
+  end
+
   def next
     BlogPost.next(self).first
   end
@@ -90,8 +91,8 @@ class BlogPost < ActiveRecord::Base
   end
 
   def live?
-    return false if published_at.nil?
-    !draft # and published_at <= Time.now
+    return true if published_at.nil? and !draft
+    !draft and published_at <= self.class.time_now_helper
   end
 
 #  def category_ids=(ids)

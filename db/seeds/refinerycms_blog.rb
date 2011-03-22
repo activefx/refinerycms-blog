@@ -1,6 +1,8 @@
 Administrator.find(:all).each do |user|
-  user.plugins.create(:name => "refinerycms_blog",
+  if user.plugins.where(:name => "refinerycms_blog").first.nil?
+    user.plugins.create(:name => "refinerycms_blog",
                       :position => (user.plugins.maximum(:position) || -1) +1)
+  end
 end
 
 page = Page.create(

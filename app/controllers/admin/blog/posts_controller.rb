@@ -10,20 +10,20 @@ class Admin::Blog::PostsController < Admin::BaseController
       :per_page => BlogPost.per_page
     })
   end
-  
+
   def create
     # if the position field exists, set this object as last object, given the conditions of this class.
-    if BlogPost.column_names.include?("position")
+    #if BlogPost.column_names.include?("position")
+    #  params[:blog_post].merge!({
+    #    :position => ((BlogPost.maximum(:position, :conditions => "")||-1) + 1)
+    #  })
+    #end
+
+    #if BlogPost.column_names.include?("user_id")
       params[:blog_post].merge!({
-        :position => ((BlogPost.maximum(:position, :conditions => "")||-1) + 1)
+        :administrator_id => current_administrator.id
       })
-    end
-    
-    if BlogPost.column_names.include?("user_id")
-      params[:blog_post].merge!({
-        :user_id => current_user.id
-      })
-    end
+    #end
 
     if (@blog_post = BlogPost.create(params[:blog_post])).valid?
       (request.xhr? ? flash.now : flash).notice = t(
@@ -60,7 +60,7 @@ class Admin::Blog::PostsController < Admin::BaseController
   before_filter :find_all_categories,
                 :only => [:new, :edit, :create, :update]
 
-protected
+  protected
 
   def find_blog_post
     @blog_post = BlogPost.find_by_slug(params[:id])

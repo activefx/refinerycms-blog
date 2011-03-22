@@ -8,6 +8,12 @@ module Refinery
         app.middleware.insert_after ::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/public"
       end
 
+#      config.to_prepare do
+#        Administrator.class_eval do
+#          references_many :blog_posts
+#        end
+#      end
+
       config.after_initialize do
         Refinery::Plugin.register do |plugin|
           plugin.name = "refinerycms_blog"
@@ -43,3 +49,4 @@ module Refinery
     end
   end
 end
+

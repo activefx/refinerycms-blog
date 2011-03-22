@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency    'refinerycms',  '>= 0.9.9.4'
   s.add_dependency    'filters_spam', '~> 0.2'
+  s.add_dependency    'mongoid_taggable_with_context'
 
   s.files             = %w(
     #{files.join("\n    ")}

@@ -3,5 +3,6 @@ Then /^there should be (\d+) blog posts?$/ do |num|
 end
 
 Then /^the blog post should belong to me$/ do
-  BlogPost.first.author.login == User.last.login
+  BlogPost.first.administrator.username == Administrator.last.username
 end
+
