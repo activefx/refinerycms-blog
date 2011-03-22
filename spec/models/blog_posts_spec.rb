@@ -17,7 +17,7 @@ describe BlogPost do
     end
 
     it "requires body" do
-      BlogPost.new(@attr.merge(:body => "")).should_not be_valid
+      BlogPost.new(@attr.merge(:body => nil)).should_not be_valid
     end
   end
 
@@ -47,10 +47,23 @@ describe BlogPost do
     end
   end
 
+  describe "tags" do
+    it "acts as taggable" do
+      (post = Factory(:blog_post)).should respond_to(:tags)
+      post.tags_array.should include("chicago")
+    end
+  end
+
+  describe "authors" do
+    it "are authored" do
+      BlogPost.new.should respond_to(:administrator)
+    end
+  end
+
   describe "by_archive scope" do
     it "returns all posts from specified month" do
-      blog_post1 = Factory(:blog_post, :published_at => Time.now - 2.minutes)
-      blog_post2 = Factory(:blog_post, :published_at => Time.now - 1.minute)
+      blog_post1 = Factory(:blog_post, :published_at => Time.now.advance(:minutes => -2))
+      blog_post2 = Factory(:blog_post, :published_at => Time.now.advance(:minutes => -1))
       Factory(:blog_post, :published_at => Time.now - 2.months)
       date = "#{Time.now.month}/#{Time.now.year}"
       BlogPost.by_archive(Time.parse(date)).count.should == 2
@@ -60,8 +73,8 @@ describe BlogPost do
 
   describe "all_previous scope" do
     it "returns all posts from previous months" do
-      blog_post1 = Factory(:blog_post, :published_at => Time.now - 2.months)
-      blog_post2 = Factory(:blog_post, :published_at => Time.now - 1.month)
+      blog_post1 = Factory(:blog_post, :published_at => Time.now.advance(:months => -2))
+      blog_post2 = Factory(:blog_post, :published_at => Time.now.advance(:months => -1))
       Factory(:blog_post, :published_at => Time.now)
       BlogPost.all_previous.count.should == 2
       BlogPost.all_previous.first.should == blog_post2
@@ -71,8 +84,8 @@ describe BlogPost do
 
   describe "live scope" do
     it "returns all posts which aren't in draft and pub date isn't in future" do
-      blog_post1 = Factory(:blog_post, :published_at => Time.now - 2.minutes)
-      blog_post2 = Factory(:blog_post, :published_at => Time.now - 1.minute)
+      blog_post1 = Factory(:blog_post, :published_at => Time.now.advance(:minutes => -2))
+      blog_post2 = Factory(:blog_post, :published_at => Time.now.advance(:minutes => -1))
       Factory(:blog_post, :draft => true)
       Factory(:blog_post, :published_at => Time.now + 1.minute)
       BlogPost.live.count.should == 2
@@ -83,16 +96,16 @@ describe BlogPost do
   describe "next scope" do
     it "returns next article based on given article" do
       blog_post1 = Factory(:blog_post)
-      blog_post2 = Factory(:blog_post, :published_at => Time.now + 1.minute)
-      BlogPost.next(blog_post1).should == [blog_post2]
+      blog_post2 = Factory(:blog_post, :published_at => Time.now.advance(:minutes => -1))
+      BlogPost.next(blog_post2).first.id.should == blog_post1.id
     end
   end
 
   describe "previous scope" do
     it "returns previous article based on given article" do
       blog_post1 = Factory(:blog_post)
-      blog_post2 = Factory(:blog_post, :published_at => Time.now + 1.minute)
-      BlogPost.previous(blog_post2).should == [blog_post1]
+      blog_post2 = Factory(:blog_post, :published_at => Time.now.advance(:minutes => -1))
+      BlogPost.previous(blog_post1).first.id.should == blog_post2.id
     end
   end
 
@@ -118,14 +131,14 @@ describe BlogPost do
     end
 
     it "returns false if post pub date is in future" do
-      Factory(:blog_post, :published_at => Time.now + 1.minute).live?.should be_false
+      Factory(:blog_post, :published_at => Time.now.advance(:minutes => 10)).live?.should be_false
     end
   end
 
   describe "#next" do
     it "returns next article when called on current article" do
-      Factory(:blog_post)
-      blog_post = Factory(:blog_post, :published_at => Time.now + 1.minute)
+      Factory(:blog_post, :published_at => Time.now.advance(:minutes => -1))
+      blog_post = Factory(:blog_post)
       blog_posts = BlogPost.all
       blog_posts.last.next.should == blog_post
     end
@@ -134,7 +147,7 @@ describe BlogPost do
   describe "#prev" do
     it "returns previous article when called on current article" do
       Factory(:blog_post)
-      blog_post = Factory(:blog_post, :published_at => Time.now - 1.minute)
+      blog_post = Factory(:blog_post, :published_at => Time.now.advance(:minutes => -1))
       blog_posts = BlogPost.all
       blog_posts.first.prev.should == blog_post
     end

@@ -8,6 +8,12 @@ module Refinery
         app.middleware.insert_after ::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/public"
       end
 
+#      config.to_prepare do
+#        Administrator.class_eval do
+#          references_many :blog_posts
+#        end
+#      end
+
       config.after_initialize do
         Refinery::Plugin.register do |plugin|
           plugin.name = "refinerycms_blog"
@@ -38,8 +44,9 @@ module Refinery
 
     class << self
       def version
-        %q{1.2}
+        %q{1.3.2}
       end
     end
   end
 end
+

@@ -1,38 +1,37 @@
 Gem::Specification.new do |s|
   s.name              = %q{refinerycms-blog}
-  s.version           = %q{1.2}
+  s.version           = %q{1.3.2}
   s.description       = %q{A really straightforward open source Ruby on Rails blog engine designed for integration with RefineryCMS.}
-  s.date              = %q{2011-03-06}
+  s.date              = %q{2011-03-22}
   s.summary           = %q{Ruby on Rails blogging engine for RefineryCMS.}
   s.email             = %q{info@refinerycms.com}
   s.homepage          = %q{http://refinerycms.com}
   s.authors           = %w(Resolve\ Digital Neoteric\ Design)
   s.require_paths     = %w(lib)
 
-  s.add_dependency    'refinerycms',  '~> 0.9.9.4'
+  s.add_dependency    'refinerycms',  '>= 0.9.9.4'
   s.add_dependency    'filters_spam', '~> 0.2'
+  s.add_dependency    'mongoid_taggable_with_context'
 
   s.files             = %w(
     lib
     lib/refinerycms-blog.rb
     lib/generators
     lib/generators/refinerycms_blog_generator.rb
-    lib/generators/refinerycms_blog
-    lib/generators/refinerycms_blog/templates
-    lib/generators/refinerycms_blog/templates/db
-    lib/generators/refinerycms_blog/templates/db/seeds
-    lib/generators/refinerycms_blog/templates/db/seeds/seed.rb
-    lib/generators/refinerycms_blog/templates/db/migrate
-    lib/generators/refinerycms_blog/templates/db/migrate/migration_number_create_singular_name.rb
     lib/gemspec.rb
     config
     config/routes.rb
     config/locales
     config/locales/ru.yml
+    config/locales/sk.yml
     config/locales/fr.yml
+    config/locales/zh-CN.yml
     config/locales/it.yml
+    config/locales/cs.yml
     config/locales/pt-BR.yml
     config/locales/nl.yml
+    config/locales/de.yml
+    config/locales/pl.yml
     config/locales/es.yml
     config/locales/nb.yml
     config/locales/en.yml
@@ -96,12 +95,14 @@ Gem::Specification.new do |s|
     app/views/blog
     app/views/blog/shared
     app/views/blog/shared/_posts.html.erb
+    app/views/blog/shared/_tags.html.erb
     app/views/blog/shared/_post.html.erb
     app/views/blog/shared/_rss_feed.html.erb
     app/views/blog/shared/_categories.html.erb
     app/views/blog/posts
     app/views/blog/posts/_post.html.erb
     app/views/blog/posts/_comment.html.erb
+    app/views/blog/posts/tagged.html.erb
     app/views/blog/posts/index.rss.builder
     app/views/blog/posts/archive.html.erb
     app/views/blog/posts/index.html.erb
@@ -138,26 +139,27 @@ Gem::Specification.new do |s|
     app/views/admin/blog/categories/index.html.erb
     app/views/admin/blog/settings
     app/views/admin/blog/settings/notification_recipients.html.erb
-    Gemfile.lock
-    generators
-    generators/refinerycms_blog
-    generators/refinerycms_blog/templates
-    generators/refinerycms_blog/templates/db
-    generators/refinerycms_blog/templates/db/seeds
-    generators/refinerycms_blog/templates/db/seeds/seed.rb
-    generators/refinerycms_blog/templates/db/migrate
-    generators/refinerycms_blog/templates/db/migrate/migration.rb
-    generators/refinerycms_blog/refinerycms_blog_generator.rb
     features
+    features/tags.feature
     features/support
     features/support/factories
     features/support/factories/blog_posts.rb
     features/support/factories/blog_comments.rb
     features/support/factories/blog_categories.rb
     features/support/paths.rb
+    features/support/step_definitions
+    features/support/step_definitions/authors_steps.rb
+    features/support/step_definitions/tags_steps.rb
+    features/authors.feature
     Gemfile
-    rails
-    rails/init.rb
+    changelog.md
+    db
+    db/seeds
+    db/seeds/refinerycms_blog.rb
+    db/migrate
+    db/migrate/3_acts_as_taggable_on_migration.rb
+    db/migrate/2_add_user_id_to_blog_posts.rb
+    db/migrate/1_create_blog_structure.rb
   )
   
 end

@@ -1,6 +1,8 @@
-User.find(:all).each do |user|
-  user.plugins.create(:name => "<%= singular_name %>",
+Administrator.find(:all).each do |user|
+  if user.plugins.where(:name => "refinerycms_blog").first.nil?
+    user.plugins.create(:name => "refinerycms_blog",
                       :position => (user.plugins.maximum(:position) || -1) +1)
+  end
 end
 
 page = Page.create(
@@ -11,6 +13,7 @@ page = Page.create(
   :menu_match => "^/blogs?(\/|\/.+?|)$"
 )
 
-RefinerySetting.find_or_set(:default_page_parts, %w(Body Side\ Body)).each do |default_page_part|
+Page.default_parts.each do |default_page_part|
   page.parts.create(:title => default_page_part, :body => nil)
 end
+
